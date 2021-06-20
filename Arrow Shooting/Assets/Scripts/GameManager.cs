@@ -39,6 +39,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         file = string.Concat(Application.persistentDataPath, "/scores.score");
+
+        Screen.orientation = ScreenOrientation.Landscape;
+
         LoadScores();
     }
 
