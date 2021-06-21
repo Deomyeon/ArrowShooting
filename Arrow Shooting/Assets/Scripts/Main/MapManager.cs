@@ -111,7 +111,7 @@ public class MapManager : MonoBehaviour
             {
                 if (GameManager.Instance.scores.ContainsKey(GameManager.Instance.stageName))
                 {
-                    GameManager.Instance.scores[GameManager.Instance.stageName] = GameManager.Instance.scores[GameManager.Instance.stageName] >= moveCount ? GameManager.Instance.scores[GameManager.Instance.stageName] : moveCount;
+                    GameManager.Instance.scores[GameManager.Instance.stageName] = GameManager.Instance.scores[GameManager.Instance.stageName] > moveCount ? moveCount : GameManager.Instance.scores[GameManager.Instance.stageName];
                 }
                 else
                 {
