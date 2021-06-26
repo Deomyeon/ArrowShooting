@@ -69,7 +69,7 @@ public class FileBrowser : MonoBehaviour
                     idx = i;
                     data.type = FileBroweType.Directory;
 
-                    data.text.text = directories[idx].Split('\\')[directories[idx].Split('\\').Length - 1];
+                    data.text.text = directories[idx].Split('\\', '/')[directories[idx].Split('\\', '/').Length - 1];
                     data.filePath = directories[idx];
 
                     data.button.onClick.AddListener(() =>
@@ -85,13 +85,13 @@ public class FileBrowser : MonoBehaviour
                     idx = i - directories.Length;
                     data.type = FileBroweType.File;
 
-                    data.text.text = files[idx].Split('\\')[files[idx].Split('\\').Length - 1];
+                    data.text.text = files[idx].Split('\\', '/')[files[idx].Split('\\', '/').Length - 1];
                     data.filePath = files[idx];
 
                     data.button.onClick.AddListener(() =>
                     {
-                        fileNameField.text = data.filePath.Split('\\')[data.filePath.Split('\\').Length - 1].Split('.')[0];
-                        fullPath = data.filePath.Split('.')[0];
+                        fileNameField.text = data.filePath.Split('\\', '/')[data.filePath.Split('\\', '/').Length - 1].Split('.')[0];
+                        fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text);
                     });
                 }
 
@@ -111,7 +111,14 @@ public class FileBrowser : MonoBehaviour
         this.browserName.text = browserName;
         onSelectedFile = callback;
 
-        directoryLink.currentPath = Directory.GetDirectoryRoot(Directory.GetCurrentDirectory());
+        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            directoryLink.currentPath = Path.GetPathRoot(Directory.GetCurrentDirectory());
+        }
+        else if (Application.platform == RuntimePlatform.Android)
+        {
+            directoryLink.currentPath = Application.persistentDataPath;
+        }
         directoryLink.directoryPathField.text = directoryLink.currentPath;
         directoryLink.directoryPathButton.onClick.RemoveAllListeners();
         directoryLink.directoryPathButton.onClick.AddListener(() =>
@@ -129,7 +136,7 @@ public class FileBrowser : MonoBehaviour
 
         ReadFilesInDirectory(directoryLink.currentPath);
 
-        fileNameField.text = browserName.Split('\\')[browserName.Split('\\').Length - 1].Split('.')[0];
+        fileNameField.text = browserName.Split('\\', '/', '/')[browserName.Split('\\', '/').Length - 1].Split('.')[0];
         fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text);
 
         fileNameButton.transform.GetChild(0).GetComponent<Text>().text = "Save";
@@ -148,7 +155,14 @@ public class FileBrowser : MonoBehaviour
         this.browserName.text = browserName;
         onSelectedFile = callback;
 
-        directoryLink.currentPath = Directory.GetDirectoryRoot(Directory.GetCurrentDirectory());
+        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            directoryLink.currentPath = Path.GetPathRoot(Directory.GetCurrentDirectory());
+        }
+        else if (Application.platform == RuntimePlatform.Android)
+        {
+            directoryLink.currentPath = Application.persistentDataPath;
+        }
         directoryLink.directoryPathField.text = directoryLink.currentPath;
         directoryLink.directoryPathButton.onClick.RemoveAllListeners();
         directoryLink.directoryPathButton.onClick.AddListener(() =>

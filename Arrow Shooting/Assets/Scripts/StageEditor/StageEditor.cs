@@ -184,6 +184,8 @@ public class StageEditor : MonoBehaviour
             GetComponent<MapManager>().LoadMap();
             GetComponent<InputManager>().inputLock = false;
 
+            selectBlock.gameObject.SetActive(false);
+            popupSelectTab.gameObject.SetActive(false);
         }
 
         backParent.gameObject.SetActive(!state);
@@ -204,8 +206,6 @@ public class StageEditor : MonoBehaviour
         sizeCounter.gameObject.SetActive(!state);
         blockTile.gameObject.SetActive(!state);
 
-        selectBlock.gameObject.SetActive(!state);
-        popupSelectTab.gameObject.SetActive(!state);
         selectedBlockImage.gameObject.SetActive(!state);
 
         zoomButton.gameObject.SetActive(state);
