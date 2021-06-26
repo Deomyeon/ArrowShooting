@@ -15,7 +15,10 @@ public class Zoom : MonoBehaviour
     private void Awake()
     {
         pivot = Vector2.zero;
-        GetComponent<Button>().onClick.AddListener(SwitchZoom);
+        if (GetComponent<Button>() != null)
+        {
+            GetComponent<Button>().onClick.AddListener(SwitchZoom);
+        }
     }
 
     private void Update()
@@ -28,7 +31,15 @@ public class Zoom : MonoBehaviour
         }
         if (isZoom)
         {
-            if (Input.GetMouseButtonDown(0))
+            UseZoom();
+        }
+    }
+
+    private void UseZoom()
+    {
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            if (Input.GetMouseButtonUp(0))
             {
 
                 RaycastHit2D cast = Physics2D.CircleCast(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.1f, Vector2.zero);
@@ -55,7 +66,50 @@ public class Zoom : MonoBehaviour
             {
                 float fixedSize = Camera.main.orthographicSize + -Input.mouseScrollDelta.y * 4;
                 if ((int)fixedSize >= 20 && (int)fixedSize <= MapManager.Instance.camSize)
-                DOTween.To(() => Camera.main.orthographicSize, x => Camera.main.orthographicSize = x, fixedSize, 0.1f);
+                    DOTween.To(() => Camera.main.orthographicSize, x => Camera.main.orthographicSize = x, fixedSize, 0.1f);
+            }
+        }
+        else if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.touchCount == 2)
+            {
+                Touch touchZero = Input.GetTouch(0);
+                Touch touchOne = Input.GetTouch(1);
+
+                Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+                Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+                float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+                float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+                float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+                Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize + deltaMagnitudeDiff * 0.5f, 20f, MapManager.Instance.camSize);
+            }
+            else if (Input.touchCount < 2)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+
+                    RaycastHit2D cast = Physics2D.CircleCast(Camera.main.ScreenToWorldPoint(Input.mousePosition), 0.1f, Vector2.zero);
+
+                    if (cast.collider != null)
+                    {
+                        if (cast.collider.CompareTag("InputField"))
+                        {
+                            pivot = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                            const float bd = MapManager.blockDistance;
+                            pivot = new Vector2(Mathf.Clamp(pivot.x, bd * -MapManager.Instance.mapSize.x / 2, bd * MapManager.Instance.mapSize.x / 2), Mathf.Clamp(pivot.y, bd * -MapManager.Instance.mapSize.y / 2, bd * MapManager.Instance.mapSize.y / 2));
+                        }
+                    }
+                }
+
+                Vector3 movePos = new Vector3(pivot.x, pivot.y, Camera.main.transform.position.z);
+
+                if (Vector3.Distance(Camera.main.transform.position, movePos) > 0.1f)
+                {
+                    Camera.main.transform.DOMove(movePos, 0.5f);
+                }
             }
         }
     }

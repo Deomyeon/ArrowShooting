@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-
-
+using UnityEngine.SceneManagement;
 
 public class Stage : MonoBehaviour
 {
@@ -36,6 +35,12 @@ public class Stage : MonoBehaviour
         stageTabPressed = new Color(1, 0.5f, 0.32f);
         SetStageLevel("STAGE 1");
     }
+
+    public void OpenEditor()
+    {
+        SceneManager.LoadScene("Editor");
+    }
+
 
     private void OpenPopupTab(string stageName)
     {

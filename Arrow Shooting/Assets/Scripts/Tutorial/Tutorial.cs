@@ -74,6 +74,48 @@ public class Tutorial : MonoBehaviour
         }
     }
 
+    public void MoveProgress(int n)
+    {
+        MapManager.Instance.canUndo = false;
+        Zoom.canZoom = false;
+        Camera.main.transform.position = new Vector3(0, 0, Camera.main.transform.position.z);
+        Camera.main.orthographicSize = 20;
+        switch (tutorialProgress)
+        {
+            case 0:
+                GetComponent<Progress0>().canvas.gameObject.SetActive(false);
+                GetComponent<Progress0>().enabled = false;
+                break;
+            case 1:
+                GetComponent<Progress1>().canvas.gameObject.SetActive(false);
+                GetComponent<Progress1>().enabled = false;
+                break;
+            case 2:
+                GetComponent<Progress2>().canvas.gameObject.SetActive(false);
+                GetComponent<Progress2>().enabled = false;
+                break;
+            case 3:
+                GetComponent<Progress3>().canvas.gameObject.SetActive(false);
+                GetComponent<Progress3>().enabled = false;
+                break;
+            case 4:
+                GetComponent<Progress4>().canvas.gameObject.SetActive(false);
+                GetComponent<Progress4>().enabled = false;
+                break;
+            case 5:
+                GetComponent<Progress5>().canvas.gameObject.SetActive(false);
+                GetComponent<Progress5>().enabled = false;
+                break;
+            case 6:
+                GetComponent<Progress6>().canvas.gameObject.SetActive(false);
+                GetComponent<Progress6>().enabled = false;
+                break;
+        }
+
+        tutorialProgress = Mathf.Clamp(tutorialProgress + n, 0, lastProgress);
+
+        MakeProgress();
+    }
 
     public static void Delay(float time, OnComplete callBack)
     {

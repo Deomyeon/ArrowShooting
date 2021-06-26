@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - InputField
+  - BlockSet
+  - Tab
   layers:
   - Default
   - TransparentFX
@@ -53,4 +55,7 @@ TagManager:
     locked: 0
   - name: Tutorial UI
     uniqueID: 2587131059
+    locked: 0
+  - name: FileBrowserUI
+    uniqueID: 2050517685
     locked: 0

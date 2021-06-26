@@ -57,6 +57,14 @@ public class MapManager : MonoBehaviour
         }
         else
         {
+            if (MapManager.Instance.backParent != null)
+            {
+                Destroy(MapManager.Instance.backParent.gameObject);
+            }
+            for (int i = 0; i < MapManager.Instance.blockParent.childCount; i++)
+            {
+                Destroy(MapManager.Instance.blockParent.GetChild(i).gameObject);
+            }
             LoadMap();
         }
 
@@ -119,7 +127,10 @@ public class MapManager : MonoBehaviour
                 }
                 GameManager.Instance.SaveScores();
 
-                clearTab.OpenClearTab();
+                if (clearTab != null)
+                {
+                    clearTab.OpenClearTab();
+                }
             }
         });
 
@@ -247,6 +258,7 @@ public class MapManager : MonoBehaviour
         mapSize = new Vector2Int(GameManager.Instance.virtualMap[0].Length, GameManager.Instance.virtualMap.Length);
         gameClear = false;
         moveCount = 0;
+        blockData.Clear();
         prevDatas.Clear();
         MakeMap(mapSize);
         for (int y = 0; y < GameManager.Instance.virtualMap.Length; y++)
@@ -296,6 +308,7 @@ public class MapManager : MonoBehaviour
         {
             Camera.main.orthographicSize = size.x * 4;
         }
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 20, Camera.main.orthographicSize);
         camSize = Camera.main.orthographicSize;
 
         backParent = new GameObject("BackParent").transform;
