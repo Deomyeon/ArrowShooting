@@ -7,10 +7,12 @@ public class Arrow : Block
 {
 
     public bool power;
+    public bool arrowMove;
 
     private Arrow()
     {
         power = true;
+        arrowMove = false;
     }
 
     public void Action(Vector2Int movePoint)
@@ -31,10 +33,13 @@ public class Arrow : Block
 
                         power = false;
 
+                        arrowMove = true;
 
                         transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             RemoveObject.SetActive(false);
+
+                            arrowMove = false;
 
                             MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
                             MapManager.Instance.blockData.Remove(this.position);
@@ -65,10 +70,14 @@ public class Arrow : Block
                     MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
                     MapManager.Instance.blockData.Remove(this.position);
 
+                    arrowMove = true;
+
                     transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                     {
 
                         RemoveObject.SetActive(false);
+
+                        arrowMove = false;
 
                         this.position = dest;
                         if (this.Rotation != rotation)
@@ -89,6 +98,7 @@ public class Arrow : Block
                 case BlockType.Multiple:
 
                     MapManager.Instance.canMove[this.position] = false;
+
                     transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
                     {
                         MapManager.Instance.blockData[dest].gameObject.SetActive(false);
@@ -114,12 +124,16 @@ public class Arrow : Block
                         MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
                         MapManager.Instance.blockData.Remove(this.position);
 
+                        arrowMove = true;
+
                         transform.DOMove(MapManager.Instance.blockTransform[jumpBlock].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             RemoveObject.SetActive(false);
 
                             transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                             {
+
+                                arrowMove = false;
 
                                 this.position = dest;
 
@@ -138,7 +152,7 @@ public class Arrow : Block
                     // Á¡ÇÁ ³¡
                     break;
                 case BlockType.Arrow:
-                    if (!(MapManager.Instance.blockData[dest] as Arrow).power)
+                    if (!(MapManager.Instance.blockData[dest] as Arrow).power && (MapManager.Instance.blockData[dest] as Arrow).arrowMove)
                     {
                         MapManager.Instance.canMove[dest] = false;
                         transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
