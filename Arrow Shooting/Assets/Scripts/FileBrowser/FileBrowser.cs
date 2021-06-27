@@ -90,7 +90,8 @@ public class FileBrowser : MonoBehaviour
 
                     data.button.onClick.AddListener(() =>
                     {
-                        fileNameField.text = data.filePath.Split('\\', '/')[data.filePath.Split('\\', '/').Length - 1].Split('.')[0];
+                        string t = data.filePath.Split('\\', '/')[data.filePath.Split('\\', '/').Length - 1];
+                        fileNameField.text = t.Replace(".arrowshooting", "");
                         fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text);
                     });
                 }
@@ -136,14 +137,14 @@ public class FileBrowser : MonoBehaviour
 
         ReadFilesInDirectory(directoryLink.currentPath);
 
-        fileNameField.text = browserName.Split('\\', '/', '/')[browserName.Split('\\', '/').Length - 1].Split('.')[0];
+        fileNameField.text = browserName.Split('\\', '/')[browserName.Split('\\', '/').Length - 1].Split('.')[0];
         fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text);
 
         fileNameButton.transform.GetChild(0).GetComponent<Text>().text = "Save";
         fileNameButton.onClick.RemoveAllListeners();
         fileNameButton.onClick.AddListener(() =>
         {
-            fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text);
+            fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text.Replace('.', '_'));
             string filePath = string.Concat(fullPath, ".arrowshooting").Replace(" ", "_");
             onSelectedFile(filePath);
         });
