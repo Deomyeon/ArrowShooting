@@ -106,20 +106,39 @@ public class FileBrowser : MonoBehaviour
 
     }
 
+    public void SetQuickPath()
+    {
+        File.WriteAllText(string.Concat(Application.persistentDataPath, "\\", "QuickPath.quickpath"), directoryLink.currentPath);
+    }
+
     public void SaveFileBrowser(string browserName, OnSelectedFile callback)
     {
         gameObject.SetActive(true);
         this.browserName.text = browserName;
         onSelectedFile = callback;
 
-        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+        bool useQuickPath = false;
+        if (File.Exists(string.Concat(Application.persistentDataPath, "\\", "QuickPath.quickpath")))
         {
-            directoryLink.currentPath = Path.GetPathRoot(Directory.GetCurrentDirectory());
+            string quickPath = File.ReadAllText(string.Concat(Application.persistentDataPath, "\\", "QuickPath.quickpath"));
+            if (Directory.Exists(quickPath))
+            {
+                useQuickPath = true;
+                directoryLink.currentPath = quickPath;
+            }
         }
-        else if (Application.platform == RuntimePlatform.Android)
+        if (!useQuickPath)
         {
-            directoryLink.currentPath = Application.persistentDataPath;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                directoryLink.currentPath = Path.GetPathRoot(Directory.GetCurrentDirectory());
+            }
+            else if (Application.platform == RuntimePlatform.Android)
+            {
+                directoryLink.currentPath = Application.persistentDataPath;
+            }
         }
+
         directoryLink.directoryPathField.text = directoryLink.currentPath;
         directoryLink.directoryPathButton.onClick.RemoveAllListeners();
         directoryLink.directoryPathButton.onClick.AddListener(() =>
@@ -144,8 +163,8 @@ public class FileBrowser : MonoBehaviour
         fileNameButton.onClick.RemoveAllListeners();
         fileNameButton.onClick.AddListener(() =>
         {
-            fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text.Replace('.', '_'));
-            string filePath = string.Concat(fullPath, ".arrowshooting").Replace(" ", "_");
+            fullPath = Path.Combine(directoryLink.currentPath, fileNameField.text.Replace('.', '_').Replace(' ', '_'));
+            string filePath = string.Concat(fullPath, ".arrowshooting");
             onSelectedFile(filePath);
         });
     }
@@ -156,14 +175,29 @@ public class FileBrowser : MonoBehaviour
         this.browserName.text = browserName;
         onSelectedFile = callback;
 
-        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+
+        bool useQuickPath = false;
+        if (File.Exists(string.Concat(Application.persistentDataPath, "\\", "QuickPath.quickpath")))
         {
-            directoryLink.currentPath = Path.GetPathRoot(Directory.GetCurrentDirectory());
+            string quickPath = File.ReadAllText(string.Concat(Application.persistentDataPath, "\\", "QuickPath.quickpath"));
+            if (Directory.Exists(quickPath))
+            {
+                useQuickPath = true;
+                directoryLink.currentPath = quickPath;
+            }
         }
-        else if (Application.platform == RuntimePlatform.Android)
+        if (!useQuickPath)
         {
-            directoryLink.currentPath = Application.persistentDataPath;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                directoryLink.currentPath = Path.GetPathRoot(Directory.GetCurrentDirectory());
+            }
+            else if (Application.platform == RuntimePlatform.Android)
+            {
+                directoryLink.currentPath = Application.persistentDataPath;
+            }
         }
+
         directoryLink.directoryPathField.text = directoryLink.currentPath;
         directoryLink.directoryPathButton.onClick.RemoveAllListeners();
         directoryLink.directoryPathButton.onClick.AddListener(() =>
@@ -188,7 +222,7 @@ public class FileBrowser : MonoBehaviour
         fileNameButton.onClick.RemoveAllListeners();
         fileNameButton.onClick.AddListener(() =>
         {
-            string filePath = string.Concat(fullPath, ".arrowshooting").Replace(" ", "_");
+            string filePath = string.Concat(fullPath, ".arrowshooting");
             if (File.Exists(filePath))
             {
                 onSelectedFile(filePath);
