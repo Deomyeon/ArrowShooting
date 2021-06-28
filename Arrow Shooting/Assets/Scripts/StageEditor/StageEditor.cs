@@ -81,6 +81,7 @@ public class StageEditor : MonoBehaviour
         if (size != new Vector2Int(widthCounter.value, heightCounter.value))
         {
             size = new Vector2Int(widthCounter.value, heightCounter.value);
+            blockData.Clear();
             MakeMap(size);
         }
 
@@ -165,7 +166,7 @@ public class StageEditor : MonoBehaviour
 
         foreach ((BlockType, Vector2Int, Vector2Int) targetData in blockData.Values)
         {
-            GameManager.Instance.virtualMap[targetData.Item2.y][targetData.Item2.x] = new VirtualBlock(targetData.Item2, targetData.Item3, targetData.Item1); ;
+            GameManager.Instance.virtualMap[targetData.Item2.y][targetData.Item2.x] = new VirtualBlock(targetData.Item2, targetData.Item3, targetData.Item1);
         }
 
         SetState(true);
@@ -280,6 +281,7 @@ public class StageEditor : MonoBehaviour
             heightCounter.text.text = heightCounter.value.ToString();
 
             size = new Vector2Int(widthCounter.value, heightCounter.value);
+            blockData.Clear();
             MakeMap(size);
 
             for (int y = 0; y < heightCounter.value; y++)

@@ -37,7 +37,7 @@ public class Zoom : MonoBehaviour
 
     private void UseZoom()
     {
-        if (Application.platform == RuntimePlatform.WindowsEditor)
+        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
         {
             if (Input.GetMouseButtonUp(0))
             {
