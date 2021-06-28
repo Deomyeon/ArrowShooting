@@ -17,14 +17,33 @@ public class PauseTab : MonoBehaviour
     const float tabPos = 1000;
     const float duration = 0.5f;
 
+    bool isPause = false;
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPause)
+            {
+                ClosePauseTab();
+            }
+            else
+            {
+                OpenPauseTab();
+            }
+        }
+    }
+
     public void OpenPauseTab()
     {
-        if (zoom.isZoom)
-        {
-            zoom.SwitchZoom();
-        }
         if (!isMove)
         {
+            isPause = true;
+            if (zoom.isZoom)
+            {
+                zoom.SwitchZoom();
+            }
             InputManager.Instance.inputLock = true;
             pauseBack.raycastTarget = true;
             isMove = true;
@@ -40,6 +59,7 @@ public class PauseTab : MonoBehaviour
     {
         if (!isMove)
         {
+            isPause = false;
             DOTween.ToAlpha(() => pauseBack.color, x => pauseBack.color = x, 0f, duration);
             isMove = true;
             transform.DOMoveY(tabPos, duration).OnComplete(() =>

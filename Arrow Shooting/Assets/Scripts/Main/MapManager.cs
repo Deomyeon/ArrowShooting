@@ -70,6 +70,14 @@ public class MapManager : MonoBehaviour
 
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+        {
+            Undo();
+        }
+    }
+
     void LateUpdate()
     {
         if (isCompleted() && !gameClear)
@@ -81,7 +89,7 @@ public class MapManager : MonoBehaviour
 
     public void Undo()
     {
-        if (prevDatas.Count > 0 && canUndo)
+        if (prevDatas.Count > 0 && canUndo && !gameClear)
         {
             Dictionary<Block, (Vector2Int, Vector2Int, bool)> dic = prevDatas.Pop();
 
@@ -119,11 +127,11 @@ public class MapManager : MonoBehaviour
             {
                 if (GameManager.Instance.scores.ContainsKey(GameManager.Instance.stageName))
                 {
-                    GameManager.Instance.scores[GameManager.Instance.stageName] = GameManager.Instance.scores[GameManager.Instance.stageName] > moveCount ? moveCount : GameManager.Instance.scores[GameManager.Instance.stageName];
+                    GameManager.Instance.scores[GameManager.Instance.stageName] = GameManager.Instance.scores[GameManager.Instance.stageName] < 1000 - moveCount ? 1000 - moveCount : GameManager.Instance.scores[GameManager.Instance.stageName];
                 }
                 else
                 {
-                    GameManager.Instance.scores[GameManager.Instance.stageName] = moveCount;
+                    GameManager.Instance.scores[GameManager.Instance.stageName] = 100 - moveCount;
                 }
                 GameManager.Instance.SaveScores();
 

@@ -83,6 +83,18 @@ public class StageEditor : MonoBehaviour
             size = new Vector2Int(widthCounter.value, heightCounter.value);
             MakeMap(size);
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (backTab.gameObject.activeSelf)
+            {
+                CloseBackTab();
+            }
+            else
+            {
+                OpenBackTab();
+            }
+        }
     }
 
 

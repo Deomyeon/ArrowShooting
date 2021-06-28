@@ -63,7 +63,6 @@ public class Block : MonoBehaviour
 
     public void Move(Vector2Int position, Vector2Int rotation, BlockType type, bool arrow)
     {
-        MapManager.Instance.canMove[position] = false;
 
         if (this.type == BlockType.Arrow)
         {
@@ -80,13 +79,11 @@ public class Block : MonoBehaviour
                 transform.DORotate(this.rotation, MapManager.blockMoveTime).OnComplete(() =>
                 {
                     this.type = type;
-                    MapManager.Instance.canMove[this.position] = true;
                 });
             }
             else
             {
                 this.type = type;
-                MapManager.Instance.canMove[this.position] = true;
             }
         });
     }

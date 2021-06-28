@@ -579,6 +579,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorial: 0
+  canUndo: 1
   mapSize: {x: 8, y: 8}
   bgBlock: {fileID: 21300000, guid: 9d03cc74f9b6eef438de4e302dca8866, type: 3}
   clearTab: {fileID: 1595486114}
@@ -595,6 +596,8 @@ MonoBehaviour:
   arrowImg:
   - {fileID: 21300000, guid: aface648a4785c64bb28be5bf00f3713, type: 3}
   - {fileID: 21300000, guid: a55fe88e1365d0a4b95905191c678a0d, type: 3}
+  blockParent: {fileID: 0}
+  backParent: {fileID: 0}
   camSize: 0
 --- !u!114 &505040339
 MonoBehaviour:
