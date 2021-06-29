@@ -31,8 +31,6 @@ public class Stage : MonoBehaviour
 
     private void Start()
     {
-        stageTabDefault = new Color(1, 0.76f, 0.32f);
-        stageTabPressed = new Color(1, 0.5f, 0.32f);
         SetStageLevel("STAGE 1");
     }
 
@@ -82,6 +80,9 @@ public class Stage : MonoBehaviour
 
     private void SetBackMain()
     {
+
+        DOTween.To(() => backMain.eulerAngles, x => backMain.eulerAngles = x, Vector3.zero, 0.5f).From(new Vector3(0, 180, 0));
+
         if (backMain.childCount == 0)
         {
             for (int i = 0; i < itemCount; i++)
@@ -98,12 +99,6 @@ public class Stage : MonoBehaviour
             temp.gameObject.name = string.Concat(stageLevel, " - ", temp.GetComponentInChildren<Text>().text);
             temp.GetComponent<Button>().onClick.AddListener(() =>
             {
-                if (selectedButton != null)
-                {
-                    selectedButton.color = new Color(0.6f, 0.45f, 0.9f);
-                }
-                selectedButton = temp.GetComponent<Image>();
-                selectedButton.color = new Color(0.4f, 0.25f, 0.9f);
                 OpenPopupTab(temp.gameObject.name);
             });
 

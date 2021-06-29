@@ -9,6 +9,7 @@ public class ClearTab : MonoBehaviour
 {
 
     public Image clearBack;
+    public Text stage;
     public Text score;
 
     const float duration = 0.5f;
@@ -18,13 +19,20 @@ public class ClearTab : MonoBehaviour
         clearBack.raycastTarget = true;
         transform.DOMoveY(0, duration);
         DOTween.ToAlpha(() => clearBack.color, x => clearBack.color = x, 0.7f, duration);
-        score.text = GameManager.Instance.stageName;
+        stage.text = GameManager.Instance.stageName;
+        score.text = (1000 - MapManager.Instance.moveCount).ToString();
     }
 
     public void Leave()
     {
         DOTween.CompleteAll();
         SceneManager.LoadScene("Stage");
+    }
+
+    public void RePlay()
+    {
+        DOTween.CompleteAll();
+        SceneManager.LoadScene("Main");
     }
 
     public void Next()

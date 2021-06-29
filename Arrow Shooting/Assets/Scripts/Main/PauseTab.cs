@@ -37,7 +37,7 @@ public class PauseTab : MonoBehaviour
 
     public void OpenPauseTab()
     {
-        if (!isMove)
+        if (!isMove && !MapManager.Instance.gameClear)
         {
             isPause = true;
             if (zoom.isZoom)

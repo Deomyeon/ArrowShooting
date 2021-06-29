@@ -11,6 +11,7 @@ public class EditorInput : MonoBehaviour
     Vector2 pivot;
 
     public RectTransform sizeCounter;
+    public RectTransform sizeHandle;
     public RectTransform sizePanel;
 
 
@@ -206,6 +207,7 @@ public class EditorInput : MonoBehaviour
                 DOTween.To(() => sizeCounter.sizeDelta, x => sizeCounter.sizeDelta = x, new Vector2(sizeCounter.sizeDelta.x, 0), 0.5f).OnComplete(() =>
                 {
                     sizePanel.gameObject.SetActive(false);
+                    sizeHandle.GetChild(0).eulerAngles = new Vector3(0, 0, 0);
                     isMoveScroll = false;
                 });
             }
@@ -214,6 +216,7 @@ public class EditorInput : MonoBehaviour
                 sizePanel.gameObject.SetActive(true);
                 DOTween.To(() => sizeCounter.sizeDelta, x => sizeCounter.sizeDelta = x, new Vector2(sizeCounter.sizeDelta.x, 700), 0.5f).OnComplete(() =>
                 {
+                    sizeHandle.GetChild(0).eulerAngles = new Vector3(0, 0, 180);
                     isMoveScroll = false;
                 });
             }
