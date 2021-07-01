@@ -81,7 +81,7 @@ public class Stage : MonoBehaviour
     private void SetBackMain()
     {
 
-        DOTween.To(() => backMain.eulerAngles, x => backMain.eulerAngles = x, Vector3.zero, 0.5f).From(new Vector3(0, 180, 0));
+        DOTween.To(() => backMain.eulerAngles, x => backMain.eulerAngles = x, Vector3.zero, 0.5f).From(new Vector3(0, 90, 0));
 
         if (backMain.childCount == 0)
         {

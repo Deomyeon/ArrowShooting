@@ -89,7 +89,12 @@ public class MapManager : MonoBehaviour
 
     public void Undo()
     {
-        if (prevDatas.Count > 0 && canUndo && !gameClear)
+        bool b = true;
+        foreach (bool item in MapManager.Instance.canMove.Values)
+        {
+            b &= item;
+        }
+        if (prevDatas.Count > 0 && canUndo && !gameClear && b)
         {
             Dictionary<Block, (Vector2Int, Vector2Int, bool)> dic = prevDatas.Pop();
 
@@ -131,7 +136,7 @@ public class MapManager : MonoBehaviour
                 }
                 else
                 {
-                    GameManager.Instance.scores[GameManager.Instance.stageName] = 100 - moveCount;
+                    GameManager.Instance.scores[GameManager.Instance.stageName] = 1000 - moveCount;
                 }
                 GameManager.Instance.SaveScores();
 
@@ -240,9 +245,8 @@ public class MapManager : MonoBehaviour
 
         moveBlockList.Clear();
 
-        moveCount++;
 
-        bool b = false; ;
+        bool b = false;
         foreach(Vector2Int item in blockData.Keys)
         {
             bool arrow = false;
@@ -258,6 +262,7 @@ public class MapManager : MonoBehaviour
         if (b)
         {
             prevDatas.Push(dic);
+            moveCount++;
         }
     }
 

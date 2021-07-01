@@ -35,6 +35,13 @@ public class Arrow : Block
 
                         arrowMove = true;
 
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
                         transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             RemoveObject.SetActive(false);
@@ -47,12 +54,35 @@ public class Arrow : Block
                             this.position = dest;
                             this.GetComponent<SpriteRenderer>().sprite = MapManager.Instance.arrowImg[power ? 0 : 1];
 
-                            MapManager.Instance.canMove[this.position] = true;
+                            if (transform.childCount != 0)
+                            {
+                                if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                                {
+                                    transform.GetChild(0).GetComponent<TrailRenderer>().startColor = new Color(0.25f, 0.3f, 1f, 1f);
+                                    transform.GetChild(0).GetComponent<TrailRenderer>().endColor = new Color(0.25f, 0.3f, 1f, 0f);
+                                }
+                            }
+
+                            transform.DOScale(1.4f, 0.1f).OnComplete(() =>
+                            {
+                                transform.DOScale(1, 0.2f).OnComplete(() =>
+                                {
+
+                                    MapManager.Instance.canMove[this.position] = true;
+                                });
+                            });
                         });
                     }
                     else
                     {
                         MapManager.Instance.canMove[this.position] = false;
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
                         transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             MapManager.Instance.canMove[this.position] = true;
@@ -72,6 +102,13 @@ public class Arrow : Block
 
                     arrowMove = true;
 
+                    if (transform.childCount != 0)
+                    {
+                        if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                        {
+                            transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                        }
+                    }
                     transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                     {
 
@@ -83,6 +120,11 @@ public class Arrow : Block
                         if (this.Rotation != rotation)
                         {
                             this.Rotation = rotation;
+
+                            transform.DOScale(1.4f, 0.1f).OnComplete(() =>
+                            {
+                                transform.DOScale(1, 0.2f);
+                            });
                             transform.DORotate(this.rotation, MapManager.blockMoveTime).OnComplete(() =>
                             {
                                 MapManager.Instance.canMove[this.position] = true;
@@ -90,23 +132,62 @@ public class Arrow : Block
                         }
                         else
                         {
-                            MapManager.Instance.canMove[this.position] = true;
+                            transform.DOScale(1.4f, 0.1f).OnComplete(() =>
+                            {
+                                transform.DOScale(1, 0.2f).OnComplete(() =>
+                                {
+
+                                    MapManager.Instance.canMove[this.position] = true;
+                                });
+                            });
                         }
                     });
                     // 회전 끝
                     break;
                 case BlockType.Multiple:
-
-                    MapManager.Instance.canMove[this.position] = false;
-
-                    transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
+                    if (power)
                     {
-                        MapManager.Instance.blockData[dest].gameObject.SetActive(false);
+                        MapManager.Instance.canMove[this.position] = false;
 
-                        MapManager.Instance.MakeBlock(dest, this.Rotation, this.type);
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
+                        transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
+                        {
+                            MapManager.Instance.blockData[dest].gameObject.SetActive(false);
 
-                        MapManager.Instance.canMove[this.position] = true;
-                    });
+                            MapManager.Instance.MakeBlock(dest, this.Rotation, this.type);
+
+                            MapManager.Instance.blockData[dest].transform.DOScale(1.4f, 0.1f).OnComplete(() =>
+                            {
+                                MapManager.Instance.blockData[dest].transform.DOScale(1, 0.2f).OnComplete(() =>
+                                {
+
+                                    MapManager.Instance.canMove[this.position] = true;
+                                });
+                            });
+
+                        });
+                    }
+                    else
+                    {
+                        MapManager.Instance.canMove[this.position] = false;
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
+                        transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
+                        {
+                            MapManager.Instance.canMove[this.position] = true;
+                        });
+                    }
                     // 증식 끝
                     break;
                 case BlockType.Jump:
@@ -126,10 +207,28 @@ public class Arrow : Block
 
                         arrowMove = true;
 
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
                         transform.DOMove(MapManager.Instance.blockTransform[jumpBlock].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             RemoveObject.SetActive(false);
+                            transform.DOScale(1.4f, 0.1f).OnComplete(() =>
+                            {
+                                transform.DOScale(1, 0.2f);
+                            });
 
+                            if (transform.childCount != 0)
+                            {
+                                if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                                {
+                                    transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                                }
+                            }
                             transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                             {
 
@@ -144,6 +243,13 @@ public class Arrow : Block
                     else
                     {
                         MapManager.Instance.canMove[this.position] = false;
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
                         transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             MapManager.Instance.canMove[this.position] = true;
@@ -155,6 +261,13 @@ public class Arrow : Block
                     if (!(MapManager.Instance.blockData[dest] as Arrow).power && (MapManager.Instance.blockData[dest] as Arrow).arrowMove)
                     {
                         MapManager.Instance.canMove[dest] = false;
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
                         transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
@@ -168,6 +281,13 @@ public class Arrow : Block
                     {
 
                         MapManager.Instance.canMove[this.position] = false;
+                        if (transform.childCount != 0)
+                        {
+                            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                            {
+                                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                            }
+                        }
                         transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             MapManager.Instance.canMove[this.position] = true;
@@ -177,6 +297,13 @@ public class Arrow : Block
                     break;
                 default:
                     MapManager.Instance.canMove[this.position] = false;
+                    if (transform.childCount != 0)
+                    {
+                        if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                        {
+                            transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                        }
+                    }
                     transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
                     {
                         MapManager.Instance.canMove[this.position] = true;
@@ -190,9 +317,23 @@ public class Arrow : Block
             if (!MapManager.Instance.blockData.ContainsKey(dest) && !(dest.x < 0 || dest.y < 0 || dest.x >= MapManager.Instance.mapSize.x || dest.y >= MapManager.Instance.mapSize.y))
             {
                 MapManager.Instance.canMove[dest] = false;
+                if (transform.childCount != 0)
+                {
+                    if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                    {
+                        transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                    }
+                }
                 transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                 {
-                    MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
+                    try
+                    {
+                        MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
+                    }
+                    catch (System.Exception e)
+                    {
+
+                    }
                     MapManager.Instance.blockData.Remove(this.position);
 
                     this.position = dest;
@@ -203,6 +344,13 @@ public class Arrow : Block
             {
 
                 MapManager.Instance.canMove[this.position] = false;
+                if (transform.childCount != 0)
+                {
+                    if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                    {
+                        transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                    }
+                }
                 transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
                 {
                     MapManager.Instance.canMove[this.position] = true;

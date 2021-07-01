@@ -68,8 +68,38 @@ public class Block : MonoBehaviour
         {
             (this as Arrow).power = arrow;
             this.GetComponent<SpriteRenderer>().sprite = MapManager.Instance.arrowImg[(this as Arrow).power ? 0 : 1];
+            if ((this as Arrow).power)
+            {
+                if (transform.childCount != 0)
+                {
+                    if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                    {
+                        transform.GetChild(0).GetComponent<TrailRenderer>().startColor = new Color(0.1f, 0.57f, 0.96f, 1f);
+                        transform.GetChild(0).GetComponent<TrailRenderer>().endColor = new Color(0.1f, 0.57f, 0.96f, 0f);
+                    }
+                }
+            }
+            else
+            {
+                if (transform.childCount != 0)
+                {
+                    if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                    {
+                        transform.GetChild(0).GetComponent<TrailRenderer>().startColor = new Color(0.25f, 0.3f, 1f, 1f);
+                        transform.GetChild(0).GetComponent<TrailRenderer>().endColor = new Color(0.25f, 0.3f, 1f, 0f);
+                    }
+                }
+            }
         }
 
+        if (transform.childCount != 0)
+        {
+            if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+            {
+                transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+            }
+        }
+        MapManager.Instance.canMove[position] = false;
         transform.DOMove(MapManager.Instance.blockTransform[position].position, MapManager.blockMoveTime).OnComplete(() =>
         {
             this.position = position;
@@ -79,11 +109,13 @@ public class Block : MonoBehaviour
                 transform.DORotate(this.rotation, MapManager.blockMoveTime).OnComplete(() =>
                 {
                     this.type = type;
+                    MapManager.Instance.canMove[this.position] = true;
                 });
             }
             else
             {
                 this.type = type;
+                MapManager.Instance.canMove[this.position] = true;
             }
         });
     }
@@ -102,6 +134,13 @@ public class Block : MonoBehaviour
         if (!(MapManager.Instance.blockData[this.position].type == BlockType.Arrow))
         {
             MapManager.Instance.canMove[this.position] = false;
+            if (transform.childCount != 0)
+            {
+                if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                {
+                    transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                }
+            }
             transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
             {
                 MapManager.Instance.canMove[this.position] = true;
