@@ -99,6 +99,7 @@ public class Stage : MonoBehaviour
             temp.gameObject.name = string.Concat(stageLevel, " - ", temp.GetComponentInChildren<Text>().text);
             temp.GetComponent<Button>().onClick.AddListener(() =>
             {
+                GameManager.Instance.GetComponent<AudioSource>().Play();
                 OpenPopupTab(temp.gameObject.name);
             });
 

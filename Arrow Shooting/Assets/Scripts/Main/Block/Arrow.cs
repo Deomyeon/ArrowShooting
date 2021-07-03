@@ -62,7 +62,9 @@ public class Arrow : Block
                                     transform.GetChild(0).GetComponent<TrailRenderer>().endColor = new Color(0.25f, 0.3f, 1f, 0f);
                                 }
                             }
+                            ParticleManager.Instance.MakeParticle(transform.position);
 
+                            MapManager.Instance.GetComponent<AudioSource>().Play();
                             transform.DOScale(1.4f, 0.1f).OnComplete(() =>
                             {
                                 transform.DOScale(1, 0.2f).OnComplete(() =>
@@ -121,6 +123,7 @@ public class Arrow : Block
                         {
                             this.Rotation = rotation;
 
+                            MapManager.Instance.GetComponent<AudioSource>().Play();
                             transform.DOScale(1.4f, 0.1f).OnComplete(() =>
                             {
                                 transform.DOScale(1, 0.2f);
@@ -132,6 +135,7 @@ public class Arrow : Block
                         }
                         else
                         {
+                            MapManager.Instance.GetComponent<AudioSource>().Play();
                             transform.DOScale(1.4f, 0.1f).OnComplete(() =>
                             {
                                 transform.DOScale(1, 0.2f).OnComplete(() =>
@@ -162,6 +166,7 @@ public class Arrow : Block
 
                             MapManager.Instance.MakeBlock(dest, this.Rotation, this.type);
 
+                            MapManager.Instance.GetComponent<AudioSource>().Play();
                             MapManager.Instance.blockData[dest].transform.DOScale(1.4f, 0.1f).OnComplete(() =>
                             {
                                 MapManager.Instance.blockData[dest].transform.DOScale(1, 0.2f).OnComplete(() =>
@@ -217,6 +222,7 @@ public class Arrow : Block
                         transform.DOMove(MapManager.Instance.blockTransform[jumpBlock].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
                             RemoveObject.SetActive(false);
+                            MapManager.Instance.GetComponent<AudioSource>().Play();
                             transform.DOScale(1.4f, 0.1f).OnComplete(() =>
                             {
                                 transform.DOScale(1, 0.2f);

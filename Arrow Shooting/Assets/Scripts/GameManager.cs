@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,6 +36,20 @@ public class GameManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        Dictionary<string, int> noButton = new Dictionary<string, int>();
+        noButton["PopupCancel"] = 0;
+        noButton["Back"] = 0;
+
+        SceneManager.sceneLoaded += (scene, mode) => {
+            Button[] buttons = Resources.FindObjectsOfTypeAll<Button>();
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                if (noButton.ContainsKey(buttons[i].gameObject.name)) continue;
+
+                buttons[i].onClick.AddListener(() => GameManager.Instance.GetComponent<AudioSource>().Play());
+            }
+        };
     }
 
     private void Start()

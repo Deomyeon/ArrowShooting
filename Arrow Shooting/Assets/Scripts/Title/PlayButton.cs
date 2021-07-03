@@ -42,6 +42,11 @@ public class PlayButton : MonoBehaviour
                 SceneManager.LoadScene("Tutorial");
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 
     private void TutorialButton()

@@ -130,19 +130,25 @@ public class MapManager : MonoBehaviour
         {
             if (!tutorial)
             {
-                if (GameManager.Instance.scores.ContainsKey(GameManager.Instance.stageName))
-                {
-                    GameManager.Instance.scores[GameManager.Instance.stageName] = GameManager.Instance.scores[GameManager.Instance.stageName] < 1000 - moveCount ? 1000 - moveCount : GameManager.Instance.scores[GameManager.Instance.stageName];
-                }
-                else
-                {
-                    GameManager.Instance.scores[GameManager.Instance.stageName] = 1000 - moveCount;
-                }
-                GameManager.Instance.SaveScores();
+                if (GameManager.Instance.stageName == string.Empty)
+                    return;
+
 
                 if (clearTab != null)
                 {
                     clearTab.OpenClearTab();
+                    if (GameManager.Instance.scores.ContainsKey(GameManager.Instance.stageName))
+                    {
+                        if (GameManager.Instance.scores[GameManager.Instance.stageName] < 1000 - moveCount)
+                        {
+                            GameManager.Instance.scores[GameManager.Instance.stageName] = 1000 - moveCount;
+                        }
+                    }
+                    else
+                    {
+                        GameManager.Instance.scores[GameManager.Instance.stageName] = 1000 - moveCount;
+                    }
+                    GameManager.Instance.SaveScores();
                 }
             }
         });
