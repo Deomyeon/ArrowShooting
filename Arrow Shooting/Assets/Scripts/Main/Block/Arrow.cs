@@ -18,7 +18,51 @@ public class Arrow : Block
     public void Action(Vector2Int movePoint)
     {
         Vector2Int dest = this.position + new Vector2Int(movePoint.x, -movePoint.y);
+        if (MapManager.Instance.blockData.ContainsKey(dest) && !(dest.x < 0 || dest.y < 0 || dest.x >= MapManager.Instance.mapSize.x || dest.y >= MapManager.Instance.mapSize.y))
+        {
+            if (MapManager.Instance.blockData[dest].type == BlockType.Arrow)
+            {
+                if (!(MapManager.Instance.blockData[dest] as Arrow).power && (MapManager.Instance.blockData[dest] as Arrow).arrowMove)
+                {
+                    MapManager.Instance.canMove[dest] = false;
 
+                    arrowMove = true;
+                    if (transform.childCount != 0)
+                    {
+                        if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                        {
+                            transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                        }
+                    }
+                    transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
+                    {
+                        arrowMove = false;
+                        MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
+                        MapManager.Instance.blockData.Remove(this.position);
+
+                        this.position = dest;
+                        MapManager.Instance.canMove[this.position] = true;
+                    });
+                }
+                else
+                {
+
+                    MapManager.Instance.canMove[this.position] = false;
+                    if (transform.childCount != 0)
+                    {
+                        if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
+                        {
+                            transform.GetChild(0).GetComponent<TrailRenderer>().Clear();
+                        }
+                    }
+                    transform.DOMove(MapManager.Instance.blockTransform[this.position].position, MapManager.blockMoveTime).OnComplete(() =>
+                    {
+                        MapManager.Instance.canMove[this.position] = true;
+                    });
+                }
+                return;
+            }
+        }
         if (MapManager.Instance.blockData.ContainsKey(dest) && !(dest.x < 0 || dest.y < 0 || dest.x >= MapManager.Instance.mapSize.x || dest.y >= MapManager.Instance.mapSize.y) && this.Rotation == movePoint)
         {
             GameObject RemoveObject = null;
@@ -200,7 +244,7 @@ public class Arrow : Block
                     Vector2Int jumpBlock = dest;
                     dest = dest + new Vector2Int(MapManager.Instance.blockData[jumpBlock].Rotation.x, -MapManager.Instance.blockData[jumpBlock].Rotation.y) * 2;
 
-                    if(!MapManager.Instance.blockData.ContainsKey(dest) && !(dest.x < 0 || dest.y < 0 || dest.x >= MapManager.Instance.mapSize.x || dest.y >= MapManager.Instance.mapSize.y))
+                    if (!MapManager.Instance.blockData.ContainsKey(dest) && !(dest.x < 0 || dest.y < 0 || dest.x >= MapManager.Instance.mapSize.x || dest.y >= MapManager.Instance.mapSize.y))
                     {
                         MapManager.Instance.canMove[dest] = false;
 
@@ -267,6 +311,8 @@ public class Arrow : Block
                     if (!(MapManager.Instance.blockData[dest] as Arrow).power && (MapManager.Instance.blockData[dest] as Arrow).arrowMove)
                     {
                         MapManager.Instance.canMove[dest] = false;
+
+                        arrowMove = true;
                         if (transform.childCount != 0)
                         {
                             if (transform.GetChild(0).GetComponent<TrailRenderer>() != null)
@@ -276,6 +322,7 @@ public class Arrow : Block
                         }
                         transform.DOMove(MapManager.Instance.blockTransform[dest].position, MapManager.blockMoveTime).OnComplete(() =>
                         {
+                            arrowMove = false;
                             MapManager.Instance.blockData[dest] = MapManager.Instance.blockData[this.position];
                             MapManager.Instance.blockData.Remove(this.position);
 
@@ -348,7 +395,6 @@ public class Arrow : Block
             }
             else
             {
-
                 MapManager.Instance.canMove[this.position] = false;
                 if (transform.childCount != 0)
                 {

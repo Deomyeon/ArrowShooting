@@ -265,10 +265,23 @@ public class MapManager : MonoBehaviour
                 b = true;
             }
         }
-        if (b)
+
+        if (tutorial)
         {
-            prevDatas.Push(dic);
+            if (b)
+            {
+                prevDatas.Push(dic);
+            }
             moveCount++;
+        }
+        else
+        {
+
+            if (b)
+            {
+                prevDatas.Push(dic);
+                moveCount++;
+            }
         }
     }
 
